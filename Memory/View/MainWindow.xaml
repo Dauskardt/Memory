@@ -1,0 +1,516 @@
+﻿<Window x:Class="Memory.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ViewModel="clr-namespace:Memory.ViewModel"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:Memory"
+        mc:Ignorable="d"
+        Title="{Binding Titel}" Height="700" Width="680" MinHeight="600" MinWidth="560" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" Icon="/Memory;component/Memory.ico">
+    <Window.DataContext>
+        <ViewModel:vmMainWindow/>
+    </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{x:Static ViewModel:CloseThisWindowCommand.Instance}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" />
+    </Window.InputBindings>
+    <Window.Resources>
+        <ViewModel:MultiDimensionalConverter x:Key="MultiDimensionalConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.7*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Height="40" Visibility="{Binding UIVisibility}">
+                <Border Grid.Row="0" Margin="10,10,10,0" BorderBrush="#FF3884B0" BorderThickness="2" Background="#55004666" CornerRadius="5" Padding="0">
+                    <Border.Effect>
+                        <DropShadowEffect Direction="240" Opacity="0.4" BlurRadius="2" ShadowDepth="2"/>
+                    </Border.Effect>
+                    <Button Content="neues Spiel.." Command="{Binding ACBilderLaden}"  Width="80" Background="Transparent" BorderBrush="Transparent" UseLayoutRounding="False">
+
+                    </Button>
+                </Border>
+                <Border Grid.Row="0" Margin="10,10,10,0" BorderBrush="#FF3884B0" BorderThickness="2" Background="#55004666" CornerRadius="5" Padding="0" IsEnabled="{Binding ButtonsEnabled}">
+                    <Border.Effect>
+                        <DropShadowEffect Direction="240" Opacity="0.4" BlurRadius="2" ShadowDepth="2"/>
+                    </Border.Effect>
+                    <Button Grid.Row="0" Content="Mischen" Command="{Binding ACShuffle}" Width="80" Background="Transparent" BorderBrush="Transparent"/>
+                </Border>
+                <Border Grid.Row="0" Margin="10,10,10,0" BorderBrush="#FF3884B0" BorderThickness="2" Background="#55004666" CornerRadius="5" Padding="0" IsEnabled="{Binding ButtonsEnabled}" >
+                    <Border.Effect>
+                        <DropShadowEffect Direction="240" Opacity="0.4" BlurRadius="2" ShadowDepth="2"/>
+                    </Border.Effect>
+                    <Button Grid.Row="0" Content="Umdrehen" Command="{Binding ACTurnAll}" Width="80" Background="Transparent" BorderBrush="Transparent"/>
+                </Border>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Height="40" HorizontalAlignment="Right" Visibility="{Binding UIVisibility}">
+                <Border Grid.Row="0" Margin="10,10,10,0" BorderBrush="#FF3884B0" BorderThickness="2" Background="#55004666" CornerRadius="5" Padding="0">
+                    <Border.Effect>
+                        <DropShadowEffect Direction="240" Opacity="0.4" BlurRadius="2" ShadowDepth="2"/>
+                    </Border.Effect>
+                    <Button Grid.Row="0" Content="HighScores" Command="{Binding ACHighScores}" Width="80" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent"/>
+                </Border>
+                <Border Grid.Row="0" Margin="10,10,10,0" BorderBrush="#FF3884B0" BorderThickness="2" Background="#55004666" CornerRadius="5" Padding="0">
+                    <Border.Effect>
+                        <DropShadowEffect Direction="240" Opacity="0.4" BlurRadius="2" ShadowDepth="2"/>
+                    </Border.Effect>
+                    <Button Grid.Row="0" Content="Beenden" Command="{Binding ACSpielEnde}" Width="80" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent"/>
+                </Border>
+            </StackPanel>
+        </Grid>
+        <Border Grid.Row="1" Margin="10" BorderBrush="#FF3884B0" BorderThickness="5" Background="#55004666" CornerRadius="10">
+            <Border.Effect>
+                <DropShadowEffect Direction="240" Opacity="0.6"/>
+            </Border.Effect>
+            <Viewbox Margin="10" >
+                <Grid  x:Name="Spielfeld" Width="800" Height="650" IsEnabled="{Binding SpielfeldEnabled}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ContentControl x:Name="Img0" Grid.Column="0" Grid.Row="0" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">0</system:Int32>
+                            <system:Int32 x:Key="1">0</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img1" Grid.Column="1" Grid.Row="0" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">0</system:Int32>
+                            <system:Int32 x:Key="1">1</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img2" Grid.Column="2" Grid.Row="0" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">0</system:Int32>
+                            <system:Int32 x:Key="1">2</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img3" Grid.Column="3" Grid.Row="0" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">0</system:Int32>
+                            <system:Int32 x:Key="1">3</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img4" Grid.Column="4" Grid.Row="0" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">0</system:Int32>
+                            <system:Int32 x:Key="1">4</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img5" Grid.Column="5" Grid.Row="0" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">0</system:Int32>
+                            <system:Int32 x:Key="1">5</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img6" Grid.Column="0" Grid.Row="1" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">1</system:Int32>
+                            <system:Int32 x:Key="1">0</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img7" Grid.Column="1" Grid.Row="1" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">1</system:Int32>
+                            <system:Int32 x:Key="1">1</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img8" Grid.Column="2" Grid.Row="1" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">1</system:Int32>
+                            <system:Int32 x:Key="1">2</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img9" Grid.Column="3" Grid.Row="1" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">1</system:Int32>
+                            <system:Int32 x:Key="1">3</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img10" Grid.Column="4" Grid.Row="1" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">1</system:Int32>
+                            <system:Int32 x:Key="1">4</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img11" Grid.Column="5" Grid.Row="1" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">1</system:Int32>
+                            <system:Int32 x:Key="1">5</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img12" Grid.Column="0" Grid.Row="2" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">2</system:Int32>
+                            <system:Int32 x:Key="1">0</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img13" Grid.Column="1" Grid.Row="2" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">2</system:Int32>
+                            <system:Int32 x:Key="1">1</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img14" Grid.Column="2" Grid.Row="2" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">2</system:Int32>
+                            <system:Int32 x:Key="1">2</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img15" Grid.Column="3" Grid.Row="2" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">2</system:Int32>
+                            <system:Int32 x:Key="1">3</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img16" Grid.Column="4" Grid.Row="2" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">2</system:Int32>
+                            <system:Int32 x:Key="1">4</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img17" Grid.Column="5" Grid.Row="2" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">2</system:Int32>
+                            <system:Int32 x:Key="1">5</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img18" Grid.Column="0" Grid.Row="3" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">3</system:Int32>
+                            <system:Int32 x:Key="1">0</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img19" Grid.Column="1" Grid.Row="3" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">3</system:Int32>
+                            <system:Int32 x:Key="1">1</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img20" Grid.Column="2" Grid.Row="3" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">3</system:Int32>
+                            <system:Int32 x:Key="1">2</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img21" Grid.Column="3" Grid.Row="3" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">3</system:Int32>
+                            <system:Int32 x:Key="1">3</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img22" Grid.Column="4" Grid.Row="3" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">3</system:Int32>
+                            <system:Int32 x:Key="1">4</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img23" Grid.Column="5" Grid.Row="3" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">3</system:Int32>
+                            <system:Int32 x:Key="1">5</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img24" Grid.Column="0" Grid.Row="4" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">4</system:Int32>
+                            <system:Int32 x:Key="1">0</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img25" Grid.Column="1" Grid.Row="4" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">4</system:Int32>
+                            <system:Int32 x:Key="1">1</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img26" Grid.Column="2" Grid.Row="4" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">4</system:Int32>
+                            <system:Int32 x:Key="1">2</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img27" Grid.Column="3" Grid.Row="4" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">4</system:Int32>
+                            <system:Int32 x:Key="1">3</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img28" Grid.Column="4" Grid.Row="4" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">4</system:Int32>
+                            <system:Int32 x:Key="1">4</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                    <ContentControl x:Name="Img29" Grid.Column="5" Grid.Row="4" IsEnabled="{Binding InputLock}">
+                        <ContentControl.Resources>
+                            <system:Int32 x:Key="0">4</system:Int32>
+                            <system:Int32 x:Key="1">5</system:Int32>
+                        </ContentControl.Resources>
+                        <ContentControl.Content>
+                            <MultiBinding Converter="{StaticResource MultiDimensionalConverter}">
+                                <Binding Path="GameBoard"/>
+                                <Binding Source="{StaticResource 0}"/>
+                                <Binding Source="{StaticResource 1}"/>
+                            </MultiBinding>
+                        </ContentControl.Content>
+                    </ContentControl>
+                </Grid>
+            </Viewbox>
+        </Border>
+        <Border Grid.Row="2" Margin="10" BorderBrush="#FF3884B0" BorderThickness="5" Background="#55004666" CornerRadius="10">
+            <StatusBar Background="Transparent">
+                <StatusBarItem Content="Spiel-Züge:" Margin="10,0,0,0"/>
+                <StatusBarItem Content="{Binding Zuege}" Margin="0,0,30,0"/>
+                <StatusBarItem Content="Bilder gefunden:"/>
+                <StatusBarItem Content="{Binding BilderGefunden}"/>
+                <StatusBarItem HorizontalAlignment="Right" Margin="0,0,20,0">
+                    <ToggleButton Content="UI ausblenden" IsChecked="{Binding UIanzeigen}">
+                        <ToggleButton.Style>
+                            <Style TargetType="{x:Type ToggleButton}">
+                                <Setter Property="Foreground" Value="#FF3884B0"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock x:Name="SimulationToggleButtonText" Margin="4 0 0 0" VerticalAlignment="Center" Text="UI AUS">
+                                                </TextBlock>
+                                            </StackPanel>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter TargetName="SimulationToggleButtonText" Property="Text" Value="UI AN"/>
+                                                    <Setter TargetName="SimulationToggleButtonText" Property="Foreground" Value="#FF2C6789"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ToggleButton.Style>
+                    </ToggleButton>
+                </StatusBarItem>
+            </StatusBar>
+        </Border>
+    </Grid>
+</Window>
